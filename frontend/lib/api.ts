@@ -1,4 +1,8 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+let defaultApiUrl = "http://localhost:8000";
+if (typeof window !== "undefined" && window.location.hostname.includes("railway.app")) {
+  defaultApiUrl = "https://leadhunter-production-142e.up.railway.app";
+}
+export const API_URL = (process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_URL !== "http://localhost:8000") ? process.env.NEXT_PUBLIC_API_URL : defaultApiUrl;
 
 export function apiUrl(path: string) {
   if (API_URL.endsWith("?path=")) {
