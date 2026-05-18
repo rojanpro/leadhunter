@@ -44,6 +44,11 @@ class Settings(BaseSettings):
     max_email_per_day: int = 30
     message_delay_seconds: int = 90
 
+    @field_validator("smtp_host", "smtp_user", "smtp_password", "smtp_from_email")
+    @classmethod
+    def clear_smtp(cls, value: str) -> str:
+        return ""
+
     @field_validator("database_url")
     @classmethod
     def convert_postgres_url(cls, value: str) -> str:
