@@ -1,0 +1,164 @@
+cPanel Deployment Steps for Lead Hunter App
+==========================================
+
+1. Check cPanel Support
+-----------------------
+Before deploying, confirm your cPanel account has:
+
+- Node.js or static hosting
+- Python App / Application Manager
+- PostgreSQL or MySQL
+- SSH / Terminal access
+- Cron Jobs
+- SSL enabled
+
+Important:
+This app is not a simple PHP website. It has:
+
+- Next.js frontend
+- FastAPI Python backend
+- PostgreSQL database
+- Redis/Celery background workers
+
+Normal shared cPanel may not fully support the backend and worker parts.
+
+
+2. Best Hosting Setup
+---------------------
+Recommended setup:
+
+- Frontend on cPanel
+- Backend, database, Redis, and workers on Railway
+
+This is usually more reliable than forcing the full app into shared cPanel.
+
+
+3. Build Frontend for cPanel
+----------------------------
+Run this from PowerShell:
+
+cd C:\Users\ASUS\Desktop\bot\frontend
+$env:NEXT_OUTPUT="export"
+$env:NEXT_PUBLIC_API_URL="/cpanel-api.php?path="
+npm run build
+
+The static site will be generated here:
+
+C:\Users\ASUS\Desktop\bot\frontend\out
+
+
+4. Upload Frontend to cPanel
+----------------------------
+Upload everything inside:
+
+frontend\out
+
+to:
+
+public_html
+
+Do not delete `.well-known` if it exists, because SSL/domain verification may use it.
+
+
+5. Add .htaccess
+----------------
+Create or update this file:
+
+public_html\.htaccess
+
+Use this content:
+
+Options -Indexes
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(campaigns|leads|messages|settings)/?$ $1.html [L]
+  RewriteRule ^_not-found/?$ _not-found.html [L]
+</IfModule>
+
+This makes direct URLs like `/leads` and `/settings` work.
+
+
+6. Add cPanel API Proxy
+-----------------------
+Create this file:
+
+public_html\cpanel-api.php
+
+This file forwards browser API calls from the cPanel frontend to your backend.
+Use this only if the backend is hosted somewhere else, such as Railway.
+
+
+7. Backend on cPanel
+--------------------
+Only try full backend hosting on cPanel if your hosting provider enables:
+
+- Working Python Application Manager
+- Valid Python interpreter
+- SSH / Terminal access
+- pip dependency installation
+- Database access
+- Redis/background worker support, or cron fallback
+
+Upload backend outside `public_html`, for example:
+
+/home3/username/lead-hunter-api
+
+Then register it in cPanel Application Manager:
+
+- Application path: lead-hunter-api
+- Application URL: /backend
+- Startup file: passenger_wsgi.py
+
+
+8. Install Backend Dependencies
+-------------------------------
+If SSH works, run:
+
+cd ~/lead-hunter-api
+pip install --user -r requirements.txt
+
+Restart the Passenger app:
+
+mkdir -p tmp
+touch tmp/restart.txt
+
+
+9. Smoke Test
+-------------
+Check these URLs:
+
+https://yourdomain.com/
+https://yourdomain.com/leads
+https://yourdomain.com/settings
+https://yourdomain.com/backend
+https://yourdomain.com/backend/health
+
+Then test dashboard login.
+
+
+10. Current Hosting Blocker We Found
+------------------------------------
+For mayaenterprises.com.np, frontend hosting worked, but backend hosting was blocked.
+
+The server reported:
+
+Shell access is not enabled on your account!
+
+Passenger also tried to use:
+
+/usr/bin/python3.9
+
+But that file does not exist on the server.
+
+Ask hosting support:
+
+Please enable shell access and fix cPanel Python Application Manager so Passenger uses a valid Python interpreter such as /opt/alt/python311/bin/python3.
+
+
+11. Security Reminder
+---------------------
+After sharing cPanel login details with anyone, change the cPanel password.
+
+Also keep `.env` secrets private and do not upload `.env` into public_html.

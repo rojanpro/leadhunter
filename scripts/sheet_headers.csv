@@ -1,0 +1,1 @@
+lead_id,campaign_id,campaign_name,business_name,category,city,country,address,phone,phone_normalized,whatsapp_exists,email,website,website_status,google_maps_url,rating,review_count,seo_score,lead_reason,whatsapp_message,whatsapp_status,email_subject,email_body,email_status,contact_status,reply_message,followup_count,do_not_contact,last_contacted_at,created_at,updated_at
