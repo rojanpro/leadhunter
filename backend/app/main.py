@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
@@ -25,10 +26,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def read_root():
+    return RedirectResponse(url="/docs")
 
 @app.get("/health")
 def health():
     return {"status": "ok", "service": "lead-hunter"}
-
 
 app.include_router(router, prefix="/api")
