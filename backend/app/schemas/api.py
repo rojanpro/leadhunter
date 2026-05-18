@@ -11,7 +11,7 @@ class CampaignBase(BaseModel):
     radius: int = 5000
     offer: str = "Website design and local SEO"
     your_name: str = "Rojan Shrestha"
-    agency_name: str = "ROJAN.PRO"
+    agency_name: str = "www.rojan.pro"
     whatsapp_template: str
     email_subject_template: str = "Quick idea for {{business_name}}"
     email_template: str
