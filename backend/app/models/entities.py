@@ -65,7 +65,7 @@ class Campaign(Base):
     radius: Mapped[int] = mapped_column(Integer, default=5000)
     offer: Mapped[str] = mapped_column(Text, default="Website design and local SEO")
     your_name: Mapped[str] = mapped_column(String(120), default="Rojan Shrestha")
-    agency_name: Mapped[str] = mapped_column(String(160), default="www.rojan.pro")
+    agency_name: Mapped[str] = mapped_column(String(160), default="ROJAN.PRO")
     whatsapp_template: Mapped[str] = mapped_column(Text, nullable=False)
     email_subject_template: Mapped[str] = mapped_column(Text, default="Quick idea for {{business_name}}")
     email_template: Mapped[str] = mapped_column(Text, nullable=False)

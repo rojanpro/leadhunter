@@ -12,7 +12,7 @@ I noticed you may not have a proper website yet. We help local businesses create
 
 Would you like me to send a simple example for {{business_name}}?
 
-You can check my work at www.rojan.pro or contact me at +971555776353.
+You can check my work at ROJAN.PRO or contact me at +971555776353.
 
 Reply STOP if you do not want messages.`;
 
@@ -24,11 +24,11 @@ We help local businesses build modern websites and improve Google visibility so 
 
 Would you like me to send a simple example of how your website could look?
 
-You can check my work at www.rojan.pro or contact me at +971555776353.
+You can check my work at ROJAN.PRO or contact me at +971555776353.
 
 Regards,
 Rojan Shrestha
-www.rojan.pro
+ROJAN.PRO
 WhatsApp: +971555776353
 
 Reply unsubscribe if you do not want further messages.`;
@@ -44,7 +44,7 @@ export default function CampaignsPage() {
     radius: 8000,
     offer: "Website design and local SEO",
     your_name: "Rojan Shrestha",
-    agency_name: "www.rojan.pro",
+    agency_name: "ROJAN.PRO",
     whatsapp_template: whatsappTemplate,
     email_subject_template: "Quick idea for {{business_name}}",
     email_template: emailTemplate,
