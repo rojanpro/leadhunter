@@ -44,6 +44,13 @@ class Settings(BaseSettings):
     max_email_per_day: int = 30
     message_delay_seconds: int = 90
 
+    @field_validator("database_url")
+    @classmethod
+    def convert_postgres_url(cls, value: str) -> str:
+        if value.startswith("postgresql://"):
+            return value.replace("postgresql://", "postgresql+psycopg://", 1)
+        return value
+
     @field_validator("cors_origins")
     @classmethod
     def normalize_origins(cls, value: str) -> str:
