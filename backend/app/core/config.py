@@ -47,8 +47,27 @@ class Settings(BaseSettings):
     @field_validator("database_url")
     @classmethod
     def convert_postgres_url(cls, value: str) -> str:
+        import os
+        # Check alternative environment variables that platforms like Railway inject
+        alternative_keys = ["DATABASE_PRIVATE_URL", "DATABASE_PUBLIC_URL", "POSTGRES_URL", "PGURL"]
+        for key in alternative_keys:
+            alt_val = os.environ.get(key)
+            if alt_val:
+                value = alt_val
+                break
+                
+        # Check if individual connection components exist and build the URL dynamically
+        pg_user = os.environ.get("PGUSER") or os.environ.get("POSTGRES_USER")
+        pg_password = os.environ.get("PGPASSWORD") or os.environ.get("POSTGRES_PASSWORD")
+        pg_host = os.environ.get("PGHOST") or os.environ.get("POSTGRES_HOST")
+        pg_port = os.environ.get("PGPORT") or os.environ.get("POSTGRES_PORT") or "5432"
+        pg_db = os.environ.get("PGDATABASE") or os.environ.get("POSTGRES_DB")
+        
+        if pg_user and pg_password and pg_host and pg_db:
+            value = f"postgresql+psycopg://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_db}"
+
         if value.startswith("postgresql://"):
-            return value.replace("postgresql://", "postgresql+psycopg://", 1)
+            value = value.replace("postgresql://", "postgresql+psycopg://", 1)
         return value
 
     @field_validator("cors_origins")
