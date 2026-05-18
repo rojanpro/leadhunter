@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     app_secret_key: str = Field(default="change-me")
     dashboard_admin_email: str = "admin@example.com"
     dashboard_admin_password: str = "change-me-now"
-    cors_origins: str = "http://localhost:3000"
+    cors_origins: str = "https://tender-motivation-production.up.railway.app,http://localhost:3000"
     api_rate_limit: str = "120/minute"
 
     database_url: str = "postgresql+psycopg://lead_hunter:lead_hunter@postgres:5432/lead_hunter"
@@ -78,7 +78,11 @@ class Settings(BaseSettings):
     @field_validator("cors_origins")
     @classmethod
     def normalize_origins(cls, value: str) -> str:
-        return value.strip()
+        new_domain = "https://tender-motivation-production.up.railway.app"
+        value = value.strip()
+        if new_domain not in value:
+            value = f"{value},{new_domain}"
+        return value
 
     @property
     def cors_origin_list(self) -> list[str]:
