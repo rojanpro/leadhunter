@@ -83,14 +83,13 @@ def save_lead_from_search_data(db: Session, campaign: Campaign, details: dict) -
     db.add(lead)
     db.commit()
     db.refresh(lead)
-    if lead.website_status in {WebsiteStatus.NO_WEBSITE, WebsiteStatus.SOCIAL_ONLY, WebsiteStatus.BAD_WEBSITE}:
-        enrich_email_for_lead.delay(lead.id)
-        generate_messages_for_lead.delay(lead.id)
-        sync_lead_to_google_sheet.delay(lead.id)
-        if campaign.auto_send_whatsapp:
-            send_whatsapp_for_lead.delay(lead.id)
-        if campaign.auto_send_email:
-            send_email_for_lead.delay(lead.id)
+    enrich_email_for_lead.delay(lead.id)
+    generate_messages_for_lead.delay(lead.id)
+    sync_lead_to_google_sheet.delay(lead.id)
+    if campaign.auto_send_whatsapp:
+        send_whatsapp_for_lead.delay(lead.id)
+    if campaign.auto_send_email:
+        send_email_for_lead.delay(lead.id)
     return lead.id
 
 
